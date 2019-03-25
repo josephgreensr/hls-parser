@@ -175,6 +175,14 @@ This section describes the structure of the object returned by `parse()` method.
 | `map`  | `MediaInitializationSection`   | No       | undefined | See [EXT-X-MAP](https://tools.ietf.org/html/draft-pantos-http-live-streaming-23#section-4.3.2.5) |
 | `programDateTime`  | `Date`   | No       | undefined | See [EXT-X-PROGRAM-DATE-TIME](https://tools.ietf.org/html/draft-pantos-http-live-streaming-23#section-4.3.2.6) |
 | `dateRange`  | `DateRange`   | No       | undefined | See [EXT-X-DATERANGE](https://tools.ietf.org/html/draft-pantos-http-live-streaming-23#section-4.3.2.7) |
+| `scte35`  | string  | No  | undefined | Base64 encoded SCTE35 Message - SCTE35 2017 Standard |
+| `scte35EventId`  | string  | No  | undefined | SCTE35 Event ID |
+| `scte35Duration` | float  | No  | undefined | SCTE35 cue out message duration |
+| `scte35Elapsed`  | float  | No  | undefined | SCTE35 remaining cue out message duration |
+| `caid`  | string  | No  | undefined | SCTE35 content airing ID or UPID - SCTE35 2017 Standard |
+| `cueIn` | boolean | No  | undefined | Whether or not this segment starts a cue-in |
+| `cueOut`  | boolean | No  | undefined | Whether or not this segment starts or continues a cue-out |
+
 
 ### `Key`
 | Property          | Type     | Required | Default   | Description   |

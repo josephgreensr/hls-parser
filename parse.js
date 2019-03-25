@@ -27,6 +27,11 @@ function getTagCategory(tagName) {
     case 'EXT-X-MAP':
     case 'EXT-X-PROGRAM-DATE-TIME':
     case 'EXT-X-DATERANGE':
+    case 'EXT-X-SCTE35':
+    case 'EXT-X-ASSET':
+    case 'EXT-X-CUE-IN':
+    case 'EXT-X-CUE-OUT':
+    case 'EXT-X-CUE-OUT-CONT':
       return 'Segment';
     case 'EXT-X-TARGETDURATION':
     case 'EXT-X-MEDIA-SEQUENCE':
@@ -129,6 +134,18 @@ function parseAttributeList(param) {
       case 'TIME-OFFSET':
         attributes[key] = utils.toNumber(val);
         break;
+      case 'CUE':
+        attributes['scte35'] = val;
+      case 'ID':
+        attributes['scte35EventId'] = val;
+        break;
+      case 'ElapsedTime':
+        attributes['scte35Elapsed'] = parseFloat(val);
+      case 'Duration':
+        attributes['scte35Duration'] = parseFloat(val);
+      case 'CAID':
+        attributes['caid'] = val;
+        break;
       default:
         if (key.startsWith('SCTE35-')) {
           attributes[key] = utils.hexToByteSequence(val);
@@ -155,6 +172,8 @@ function parseTagParam(name, param) {
     case 'EXT-X-MEDIA-SEQUENCE':
     case 'EXT-X-DISCONTINUITY-SEQUENCE':
       return [utils.toNumber(param), null];
+    case 'EXT-X-CUE-OUT':
+      return [null, parseAttributeList('Duration=' + param)]
     case 'EXT-X-KEY':
     case 'EXT-X-MAP':
     case 'EXT-X-DATERANGE':
@@ -163,6 +182,9 @@ function parseTagParam(name, param) {
     case 'EXT-X-I-FRAME-STREAM-INF':
     case 'EXT-X-SESSION-DATA':
     case 'EXT-X-SESSION-KEY':
+    case 'EXT-X-SCTE35':
+    case 'EXT-X-ASSET':
+    case 'EXT-X-CUE-OUT-CONT':
     case 'EXT-X-START':
       return [null, parseAttributeList(param)];
     case 'EXTINF':
@@ -442,6 +464,21 @@ function parseSegment(lines, uri, start, end, mediaSequenceNumber, discontinuity
         endOnNext: attributes['END-ON-NEXT'],
         attributes: attrs
       });
+    } else if ( name === 'EXT-X-SCTE35') {
+        segment.scte35 = attributes['scte35'];
+        segment.scte35EventId = attributes['scte35EventId'];
+    } else if (name === 'EXT-X-ASSET') {
+        segment.caid = attributes['caid'];
+    } else if (name === 'EXT-X-CUE-IN') {
+        segment.cueIn = true;
+    } else if (name === 'EXT-X-CUE-OUT') {
+        segment.scte35Duration = attributes['scte35Duration'];
+        segment.cueOut = true;
+    } else if (name === 'EXT-X-CUE-OUT-CONT') {
+        segment.scte35Elapsed = attributes['scte35Elapsed']
+        segment.scte35Duration = attributes['scte35Duration'];
+        segment.caid = attributes['caid'];
+        segment.cueOut = true;
     }
   }
   return segment;

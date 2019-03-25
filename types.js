@@ -222,7 +222,14 @@ class Segment extends Data {
     key,
     map,
     programDateTime,
-    dateRange
+    dateRange,
+    scte35, 
+    scte35EventId, 
+    scte35Duration, 
+    scte35Elapsed, 
+    caid, 
+    cueIn, 
+    cueOut
   }) {
     super('segment');
     utils.PARAMCHECK(uri, mediaSequenceNumber, discontinuitySequence);
@@ -239,6 +246,13 @@ class Segment extends Data {
     this.map = map;
     this.programDateTime = programDateTime;
     this.dateRange = dateRange;
+    this.scte35 = scte35; 
+    this.scte35EventId = scte35EventId; 
+    this.scte35Duration = scte35Duration; 
+    this.scte35Elapsed = scte35Elapsed; 
+    this.caid = caid; 
+    this.cueIn = cueIn; 
+    this.cueOut = cueOut;
   }
 }
 
